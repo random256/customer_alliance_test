@@ -4,6 +4,7 @@
 namespace App\UseCase\Request;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class GetStatisticsCommand implements RequestCommandInterface
 {
@@ -26,4 +27,18 @@ class GetStatisticsCommand implements RequestCommandInterface
      * @var string A "Y-m-d H:i:s" formatted value
      */
     public $date_to;
+
+    /**
+     * @Assert\Callback()
+     * @param ExecutionContextInterface $context
+     * @param $payload
+     */
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        if ($this->date_from > $this->date_to ) {
+            $context->buildViolation('date_from must be less than date_to')
+                ->atPath('date_from')
+                ->addViolation();
+        }
+    }
 }
