@@ -1,12 +1,12 @@
 <?php
 
 
-namespace App\UseCase\Request;
+namespace App\DTO\Request;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-class GetStatisticsCommand implements RequestCommandInterface
+class GetStatisticsRequest implements RequestDTOInterface
 {
     /**
      * @var string

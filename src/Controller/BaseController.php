@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\UseCase\Request\RequestCommandInterface;
+use App\DTO\Request\RequestDTOInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,7 +41,7 @@ class BaseController extends AbstractController
         $this->denormalizer = $denormalizer;
     }
 
-    protected function validate(RequestCommandInterface $requestCommand)
+    protected function validate(RequestDTOInterface $requestCommand)
     {
         $violations = $this->validator->validate($requestCommand);
         if (count($violations)) {
