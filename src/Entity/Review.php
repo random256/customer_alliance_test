@@ -39,7 +39,7 @@ class Review
      */
     private $created_date;
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }
