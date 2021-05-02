@@ -25,7 +25,11 @@ class ReviewRepository extends ServiceEntityRepository
         $this->hotels = $hotelRepository;
     }
 
-    public function getStatistics(GetStatisticsRequest $request)
+    /**
+     * @param GetStatisticsRequest $request
+     * @return array
+     */
+    public function getStatistics(GetStatisticsRequest $request): array
     {
         $hotel = $this->hotels->findByID($request->hotel_id);
 

@@ -3,18 +3,13 @@
 namespace App\Controller;
 
 use App\DTO\Request\GetStatisticsRequest;
-use App\DTO\Response\Transformer\StatisticsResponseDTOTransformer;
-use App\Entity\Hotel;
+use App\DTO\Response\GetStatisticsResponse;
 use App\Repository\HotelRepository;
 use App\Repository\ReviewRepository;
-use Doctrine\DBAL\Types\TextType;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class StatisticsController extends BaseController
 {
@@ -22,19 +17,26 @@ class StatisticsController extends BaseController
 
     private HotelRepository $hotels;
 
-    public function __construct(HotelRepository $hotels, ReviewRepository $reviews)
+    private DenormalizerInterface $denormalizer;
+
+    public function __construct(HotelRepository $hotels, ReviewRepository $reviews, DenormalizerInterface $denormalizer)
     {
         $this->hotels = $hotels;
         $this->reviews = $reviews;
+        $this->denormalizer = $denormalizer;
     }
 
     /**
      * @Route("/statistics", methods={"GET"}, name="statistics")
      */
-    public function index(GetStatisticsRequest $request): Response
+    public function getStatistics(GetStatisticsRequest $request): Response
     {
         $data = $this->reviews->getStatistics($request);
 
-        return $this->json($data);
+        $statistics = $this->denormalizer->denormalize($data, GetStatisticsResponse::class.'[]', null, [
+            ObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true
+        ]);
+
+        return $this->json($statistics);
     }
 }
