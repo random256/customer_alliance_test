@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -35,8 +36,12 @@ class ErrorController extends AbstractController
 
     protected function getError(FlattenException $exception): array
     {
+        $errorMapping = [
+            BadRequestHttpException::class => Response::HTTP_BAD_REQUEST,
+        ];
+
         $error = [
-            'code' => $exception->getCode() > 0 ? $exception->getCode() : Response::HTTP_INTERNAL_SERVER_ERROR,
+            'code' => array_key_exists($exception->getClass(), $errorMapping) ? $errorMapping[$exception->getClass()] : Response::HTTP_INTERNAL_SERVER_ERROR,
             'message' => $exception->getMessage(),
         ];
 
