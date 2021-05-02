@@ -1,0 +1,91 @@
+openapi: 3.0.1
+info:
+  title: Customer Alliance Test
+  description: Customer Alliance Test API description
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000/
+
+tags:
+  - name: statistics
+
+paths:
+  /statistics:
+    get:
+      tags:
+        - "statistics"
+      summary: "get reviews statistics"
+      security:
+        - oauth: []
+      parameters:
+        - name: hotel_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: date_from
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: date_to
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/get_statistics_response'
+        400:
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+              examples:
+                error_1:
+                  value:
+                    code: 400
+                    error_description: 'hotel_id is required, date_from is required, date_to is required'
+                error_2:
+                  value:
+                    code: 400
+                    error_description: 'date_to must be a valid datetime, date_to must be a valid datetime'
+        404:
+          description: not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+              examples:
+                error_1:
+                  value:
+                    code: 404
+                    error_description: 'Hotel [3ac33234-aa74-11eb-b2db-0242ac160002f] not found'
+components:
+  schemas:
+    error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    get_statistics_response:
+      type: array
+      items:
+        type: object
+        properties:
+          review_count:
+            type: integer
+          average_score:
+            type: string #todo number
+          date_group:
+            type: string
