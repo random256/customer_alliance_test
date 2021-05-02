@@ -10,6 +10,8 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class GetStatisticsRequest implements RequestDTOInterface
 {
+    const DATETIME_FORMAT = 'Y-m-d H:i:s';
+
     /**
      * @var string
      * @var @Assert\NotBlank(message="hotel_id is required")
@@ -19,14 +21,14 @@ class GetStatisticsRequest implements RequestDTOInterface
     /**
      * @var @Assert\NotBlank(message="date_from is required")
      * @var @Assert\DateTime(message="date_to must be a valid datetime")
-     * @var string A "Y-m-d H:i:s" formatted value
+     * @var string A "self::DATETIME_FORMAT" formatted value
      */
     public $date_from;
 
     /**
      * @var @Assert\NotBlank(message="date_to is required")
      * @var @Assert\DateTime(message="date_to must be a valid datetime")
-     * @var string A "Y-m-d H:i:s" formatted value
+     * @var string A "self::DATETIME_FORMAT" formatted value
      */
     public $date_to;
 
@@ -36,7 +38,7 @@ class GetStatisticsRequest implements RequestDTOInterface
         $this->date_from = $request->query->get('date_from');
         $this->date_to = $request->query->get('date_to');
     }
-    
+
     /**
      * @Assert\Callback()
      * @param ExecutionContextInterface $context

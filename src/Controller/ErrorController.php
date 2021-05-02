@@ -12,10 +12,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ErrorController extends AbstractController
 {
-    /**
-     * @var bool
-     */
-    private $debug;
+    private bool $debug;
 
     public function __construct(bool $debug = false)
     {
@@ -39,7 +36,7 @@ class ErrorController extends AbstractController
     protected function getError(FlattenException $exception): array
     {
         $error = [
-            'code' => 400,
+            'code' => $exception->getCode() > 0 ? $exception->getCode() : Response::HTTP_INTERNAL_SERVER_ERROR,
             'message' => $exception->getMessage(),
         ];
 

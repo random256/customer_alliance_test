@@ -15,12 +15,12 @@ class Hotel
      * @ORM\Column(name="id", type="string")
      * @ORM\GeneratedValue(strategy="UUID")
      */
-    private $id;
+    private ?string $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private ?string $name;
 
     public function getId(): ?string
     {

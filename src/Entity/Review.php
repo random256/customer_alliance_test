@@ -15,29 +15,29 @@ class Review
      * @ORM\Column(name="id", type="string")
      * @ORM\GeneratedValue(strategy="UUID")
      */
-    private $id;
+    private ?string $id;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $score;
+    private ?int $score;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $comment;
+    private ?string $comment;
 
     /**
      * @var Hotel
      * @ORM\ManyToOne(targetEntity="Hotel")
      * @ORM\JoinColumn(name="hotel_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
-    private $hotel;
+    private Hotel $hotel;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $created_date;
+    private ?\DateTimeInterface $created_date;
 
     public function getId(): ?string
     {
