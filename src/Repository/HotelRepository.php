@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Hotel;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @method Hotel|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,32 +20,13 @@ class HotelRepository extends ServiceEntityRepository
         parent::__construct($registry, Hotel::class);
     }
 
-    // /**
-    //  * @return Hotel[] Returns an array of Hotel objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findByID($id): Hotel
     {
-        return $this->createQueryBuilder('h')
-            ->andWhere('h.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('h.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $hotel = parent::find($id);
+        if ($hotel) {
+            return $hotel;
+        }
 
-    /*
-    public function findOneBySomeField($value): ?Hotel
-    {
-        return $this->createQueryBuilder('h')
-            ->andWhere('h.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        throw new \DomainException(sprintf('Hotel [%s] not found', $id), Response::HTTP_NOT_FOUND);
     }
-    */
 }

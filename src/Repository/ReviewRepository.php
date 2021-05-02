@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\DTO\Request\GetStatisticsRequest;
 use App\Entity\Review;
+use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,19 +16,55 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ReviewRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private HotelRepository $hotels;
+
+    public function __construct(ManagerRegistry $registry, HotelRepository $hotelRepository)
     {
         parent::__construct($registry, Review::class);
+
+        $this->hotels = $hotelRepository;
     }
 
-    public function getStatistics()
+    public function getStatistics(GetStatisticsRequest $request)
     {
-        /*
-         *   - 1 - 29 days: Grouped daily
-            - 30 - 89 days: Grouped weekly
-              - More than 89 days: Grouped monthly
+        $hotel = $this->hotels->findByID($request->hotel_id);
 
-         */
-//        "review-count", "average-score" and "date-group"
+        $dateFrom = Carbon::parse($request->date_from);
+        $dateTo = Carbon::parse($request->date_to);
+
+        $daysDiff = $dateTo->diffInDays($dateFrom);
+
+        $qb = $this->createQueryBuilder('r')
+            ->select('count(r) as review_count')
+            ->addSelect('avg(r.score) as average_score')
+            ->addSelect('DATE_FORMAT(r.created_date, :date_format) as date_group')
+            ->andWhere('r.created_date BETWEEN :date_from and :date_to')
+            ->andWhere('r.hotel = :hotel')
+            ->setParameters([
+                'date_from' => $dateFrom,
+                'date_to' => $dateTo,
+                'hotel' => $hotel,
+                'date_format' => $this->getMYSQLDateFormat($daysDiff),
+            ])
+            ->groupBy('date_group')
+            ->orderBy('date_group')
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+
+    protected function getMYSQLDateFormat(int $daysDiff): string
+    {
+        if ($daysDiff < 30) {
+            // - 1 - 29 days: Grouped daily
+            return '%Y/%m/%d';
+        }
+        if ($daysDiff < 90) {
+            // - 30 - 89 days: Grouped weekly
+            return '%Y/%u';
+        }
+
+        // - More than 89 days: Grouped monthly
+        return '%Y/%m';
     }
 }
