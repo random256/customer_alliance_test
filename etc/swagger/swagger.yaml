@@ -86,6 +86,6 @@ components:
           review_count:
             type: integer
           average_score:
-            type: string #todo number
+            type: number
           date_group:
             type: string
