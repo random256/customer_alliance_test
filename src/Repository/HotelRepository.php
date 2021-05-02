@@ -6,6 +6,7 @@ use App\Entity\Hotel;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\Exception\NotFoundResourceException;
 
 /**
  * @method Hotel|null find($id, $lockMode = null, $lockVersion = null)
@@ -27,6 +28,6 @@ class HotelRepository extends ServiceEntityRepository
             return $hotel;
         }
 
-        throw new \DomainException(sprintf('Hotel [%s] not found', $id), Response::HTTP_NOT_FOUND);
+        throw new NotFoundResourceException(sprintf('Hotel [%s] not found', $id));
     }
 }

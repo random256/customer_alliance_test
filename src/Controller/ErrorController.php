@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ErrorController extends AbstractController
@@ -38,6 +39,7 @@ class ErrorController extends AbstractController
     {
         $errorMapping = [
             BadRequestHttpException::class => Response::HTTP_BAD_REQUEST,
+            NotFoundResourceException::class => Response::HTTP_NOT_FOUND,
         ];
 
         $error = [
