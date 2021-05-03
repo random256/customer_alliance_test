@@ -61,7 +61,7 @@ class ReviewRepository extends ServiceEntityRepository
     {
         if ($daysDiff < 30) {
             // - 1 - 29 days: Grouped daily
-            return '%Y/%m/%d';
+            return '%Y-%m-%d';
         }
         if ($daysDiff < 90) {
             // - 30 - 89 days: Grouped weekly
@@ -69,6 +69,6 @@ class ReviewRepository extends ServiceEntityRepository
         }
 
         // - More than 89 days: Grouped monthly
-        return '%Y/%m';
+        return '%Y-%m';
     }
 }

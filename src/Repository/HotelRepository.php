@@ -3,9 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Hotel;
+use App\Factory\HotelFactory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
 
 /**
@@ -23,7 +23,7 @@ class HotelRepository extends ServiceEntityRepository
 
     public function findByID($id): Hotel
     {
-        $hotel = parent::find($id);
+        $hotel = $this->find($id);
         if ($hotel) {
             return $hotel;
         }
